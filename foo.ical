@@ -1,0 +1,103 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Meetup//RemoteApi//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-ORIGINAL-URL:https://www.meetup.com/improvbouldermeetup/events/ical/
+X-WR-CALNAME:Events - Improv Boulder
+BEGIN:VTIMEZONE
+TZID:America/Denver
+TZURL:http://tzurl.org/zoneinfo-outlook/America/Denver
+X-LIC-LOCATION:America/Denver
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0600
+TZNAME:MDT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0700
+TZNAME:MST
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20241126T040128Z
+DTSTART;TZID=America/Denver:20241205T193000
+DTEND;TZID=America/Denver:20241205T213000
+STATUS:CONFIRMED
+SUMMARY:Improv Boulder show at Full Cycle - December 5th! In Boulder!
+DESCRIPTION:Improv Boulder\nThursday\, December 5 at 7:30 PM\n\nJoin us f
+ or a totally new live improv show with the Boulder area's best talent. T
+ he show is like Who's Line is It Anyway meets Saturday Night Live. Yo...
+ \n\nhttps://www.meetup.com/improvbouldermeetup/events/304732350/
+CLASS:PUBLIC
+CREATED:20241124T004726Z
+GEO:39.97;-105.15
+LOCATION:Full Cycle Bikes & Colorado Multisport (2355 30th Street\, Bould
+ er\, CO 80301)
+URL:https://www.meetup.com/improvbouldermeetup/events/304732350/
+LAST-MODIFIED:20241124T004941Z
+UID:event_304732350@meetup.com
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20241126T040128Z
+DTSTART;TZID=America/Denver:20241207T140000
+DTEND;TZID=America/Denver:20241207T170000
+STATUS:CONFIRMED
+SUMMARY:3 hour Intensive workshop with Ian Gibbs - Scene Foundation $55 
+DESCRIPTION:Improv Boulder\nSaturday\, December 7 at 2:00 PM\n\nJoin Ian 
+ Gibbs\, longtime improviser and team captain of Welcome to the Dojo\, fo
+ r a 3-hour intensive workshop on Saturday\, December 7th\, from 2 to 5 p
+ m...\n\nhttps://www.meetup.com/improvbouldermeetup/events/304710080/
+CLASS:PUBLIC
+CREATED:20241122T171843Z
+GEO:39.97;-105.15
+LOCATION:The Louisville Underground (640 Main St\, Louisville\, CO 80027)
+ 
+URL:https://www.meetup.com/improvbouldermeetup/events/304710080/
+LAST-MODIFIED:20241122T171947Z
+UID:event_304710080@meetup.com
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20241126T040128Z
+DTSTART;TZID=America/Denver:20241214T120000
+DTEND;TZID=America/Denver:20241214T150000
+STATUS:CONFIRMED
+SUMMARY:3 hour Intensive workshop with Ian Gibbs - Arc of the Scene $55 
+DESCRIPTION:Improv Boulder\nSaturday\, December 14 at 12:00 PM\n\nJoin Ia
+ n Gibbs\, longtime improviser and team captain of Welcome to the Dojo\, 
+ for a 3-hour intensive workshop on Saturday\, December 14th\, from noon 
+ to ...\n\nhttps://www.meetup.com/improvbouldermeetup/events/304710118/
+CLASS:PUBLIC
+CREATED:20241122T172515Z
+GEO:39.97;-105.15
+LOCATION:The Louisville Underground (640 Main St\, Louisville\, CO 80027)
+ 
+URL:https://www.meetup.com/improvbouldermeetup/events/304710118/
+LAST-MODIFIED:20241122T172515Z
+UID:event_304710118@meetup.com
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20241126T040128Z
+DTSTART;TZID=America/Denver:20250107T190000
+DTEND;TZID=America/Denver:20250107T213000
+STATUS:CONFIRMED
+SUMMARY:Improv 201 Class with Ian Gibbs - Tuesdays January 7th to Februar
+ y 18th
+DESCRIPTION:Improv Boulder\nTuesday\, January 7 at 7:00 PM\n\nBuilding on
+  our 101 curriculum\, you will learn how to create interesting character
+ s\, polish your 2-person scene work\, grasp the fundamentals of patter..
+ .\n\nhttps://www.meetup.com/improvbouldermeetup/events/304709376/
+CLASS:PUBLIC
+CREATED:20241122T165204Z
+GEO:39.97;-105.15
+LOCATION:Dairy Center for the Arts (2590 Walnut St\, Boulder\, CO 80301)
+URL:https://www.meetup.com/improvbouldermeetup/events/304709376/
+LAST-MODIFIED:20241122T170747Z
+UID:event_304709376@meetup.com
+END:VEVENT
+END:VCALENDAR
