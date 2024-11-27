@@ -1,0 +1,8 @@
+{
+	"wordpress": {
+		"url": "https://improvboulder-staging.dreamhosters.com/",
+		"api_url": "https://improvboulder-staging.dreamhosters.com/wp-json/wp/v2/events",
+		"username": "greg.edelston",
+		"application-password": "huOW 3VER 7OAB ddmL hOOU 22Ju"
+	}
+}
