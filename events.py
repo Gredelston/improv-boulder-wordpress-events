@@ -164,9 +164,3 @@ def upload_event_to_wordpress(
     else:
         logging.warning("Failed to create event '%s': %s", title, response.text)
 
-
-if __name__ == "__main__":
-    events = download_meetup_ical_events()
-    for e in events:
-        e.print()
-        print()
