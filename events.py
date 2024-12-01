@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
+"""Deal with events in a platform-agnostic way."""
 
 import csv
 import datetime
 import logging
-import re
 from typing import Any
 
-import feedparser
-import icalendar
 import requests
-import requests.auth
 
 import config
 
@@ -18,6 +14,7 @@ WP_META_KEY_MEETUP_EVENT_ID = "_meetup_event_id"
 
 
 class Event:
+    """Platform-agnostic representation of an event."""
     def __init__(
         self,
         title: str,
@@ -28,6 +25,7 @@ class Event:
         start_time: datetime.datetime,
         end_time: datetime.datetime,
     ) -> None:
+        """Declare basic Event attributes."""
         self.title = title
         self.description = description
         self.location = location
@@ -36,21 +34,8 @@ class Event:
         self.start_time = start_time
         self.end_time = end_time
 
-    @classmethod
-    def from_ical_vevent(cls, vevent: icalendar.cal.Event) -> "Event":
-        return cls(
-            str(vevent["summary"]),
-            # TODO: Remove the group name and datetime from the beginning of
-            # the description, and maybe remove the URL from the end.
-            str(vevent["description"]),
-            str(vevent["location"]),
-            vevent["url"],
-            _extract_meetup_id(vevent),
-            vevent["dtstart"].dt,
-            vevent["dtend"].dt,
-        )
-
     def print(self) -> None:
+        """Print all the info about an Event."""
         print("EVENT")
         print(f"Title: {self.title}")
         print(f"Description: {self.description}")
@@ -59,63 +44,7 @@ class Event:
         print(f"Meetup ID: {self.meetup_id}")
         print(f"Start time: {self.start_time}")
         print(f"End time: {self.end_time}")
-
-
-def _extract_meetup_id(vevent: icalendar.cal.Event) -> int:
-    uid = str(vevent["uid"])
-    regex = re.compile(r"^event_(\d+)@meetup\.com$")
-    m = regex.search(uid)
-    if not m:
-        raise ValueError("Failed to extract Meetup ID from vevent uid %s", uid)
-    capture_group = m.group(1)
-    return int(capture_group)
-
-
-def download_meetup_ical(cfg: config.Config) -> icalendar.Calendar:
-    ical_url = _get_meetup_events_ical_url(cfg.meetup_events_url)
-    response = requests.get(ical_url)
-    if response.status_code != 200:
-        raise Exception(
-            "Failed to get Events ical from %s (code %d): %s",
-            ical_url,
-            response.status_code,
-            response.text,
-        )
-    return icalendar.Calendar.from_ical(response.text)
-
-
-def download_meetup_ical_events(cfg: config.Config) -> list[icalendar.Event]:
-    calendar = download_meetup_ical(cfg)
-    vevents = calendar.walk("VEVENT")
-    return [Event.from_ical_vevent(vevent) for vevent in vevents]
-
-
-def download_meetup_rss(cfg: config.Config) -> list[dict[str, Any]]:
-    rss_url = _get_meetup_events_rss_url(cfg.meetup_events_url)
-    events = feedparser.parse(rss_url).entries
-    logging.info(
-        "Downloaded %s Meetup events from %s: %s",
-        len(events),
-        rss_url,
-        events,
-    )
-    return events
-
-
-def _get_meetup_events_rss_url(meetup_events_url: str) -> str:
-    """Return the URL used for GET-ing an RSS feed of Meetup events."""
-    return meetup_events_url.rstrip("/") + "/rss"
-
-
-def _get_meetup_events_ical_url(meetup_events_url: str) -> str:
-    """Return the URL used for GET-ing an iCal of Meetup events."""
-    return meetup_events_url.rstrip("/") + "/ical"
-
-
-def get_event_id_from_meetup_event(event: dict[str, Any]) -> str:
-    """Extract the event ID from a Meetup event JSON."""
-    # TODO
-    return ""
+        print()
 
 
 def _get_wordpress_events_api_url(wordpress_url: str) -> str:
