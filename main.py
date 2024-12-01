@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
+"""Download events from Meetup and upload them to Wordpress Events Calendar."""
+
 import argparse
 import logging
 import sys
 
 import config
-import events
 import meetup
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--dryrun",
@@ -27,6 +29,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 
 def main(argv: list[str]) -> None:
+    """Main script logic."""
     args = parse_args(argv)
     logging.getLogger().setLevel(args.log_level)
 

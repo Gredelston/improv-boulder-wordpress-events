@@ -1,4 +1,4 @@
-#!/usr/bin/env
+"""Parse environment-specific configs, possibly including secrets."""
 
 import json
 import logging
@@ -58,11 +58,16 @@ def load(config_file: Path = CONFIG_FILE) -> Config:
     logging.debug("Loading config file: %s", config_file)
     if not config_file.exists():
         raise FileNotFoundError(config_file)
-    with open(config_file, "r") as f:
+    # pylint: disable=invalid-name
+    with open(config_file, "r", encoding="utf-8") as f:
         return Config(json.load(f))
 
 
-def _get(d: dict[str, Any], key: str, dict_name: str = "dict") -> Any:
+def _get(
+    d: dict[str, Any],  # pylint: disable=invalid-name
+    key: str,
+    dict_name: str = "dict",
+) -> Any:
     """Return a value from a dict.
 
     If the key is not present, then raise a more helpful KeyError that will help

@@ -1,6 +1,5 @@
 """Deal with events in a platform-agnostic way."""
 
-import csv
 import datetime
 import logging
 from typing import Any
@@ -13,9 +12,14 @@ import config
 WP_META_KEY_MEETUP_EVENT_ID = "_meetup_event_id"
 
 
-class Event:
+class InvalidResponseException(Exception):
+    """An HTTP request returned an unexpected response."""
+
+
+class Event:  # pylint: disable=too-few-public-methods
     """Platform-agnostic representation of an event."""
-    def __init__(
+
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         title: str,
         description: str,
@@ -54,29 +58,28 @@ def _get_wordpress_events_api_url(wordpress_url: str) -> str:
 
 def get_wordpress_event(
     cfg: config.Config,
-    meetup_event_id: str,
+    event_id: str,
 ) -> dict[str, Any] | None:
-    """Check Wordpress to see whether a Meetup event already exists."""
+    """Check Wordpress to see whether a event already exists on Wordpress."""
     params = {
         "meta_key": WP_META_KEY_MEETUP_EVENT_ID,
-        "meta_value": meetup_event_id,
+        "meta_value": event_id,
     }
     response = requests.get(
         _get_wordpress_events_api_url(cfg.wordpress_url),
         params=params,
         auth=cfg.wordpress_credentials,
+        timeout=30,
     )
-    if response.status_code == 200:
-        events = response.json()
-        if len(events) > 1:
-            raise Exception(
-                "Found %d events with meetup event ID %s: %s",
-                len(events),
-                meetup_event_id,
-                events,
-            )
-        return events[0]
-    return None
+    response.raise_for_status()
+    events = response.json()
+    if not events:
+        return None
+    if len(events) > 1:
+        raise InvalidResponseException(
+            f"Found {len(events)} events with ID {event_id}: {events}"
+        )
+    return events[0]
 
 
 def upload_event_to_wordpress(
@@ -84,6 +87,7 @@ def upload_event_to_wordpress(
     title: str,
     description: str,
 ) -> None:
+    """Upload an event to Wordpress."""
     event_data = {
         "title": title,
         "content": description,
@@ -94,6 +98,7 @@ def upload_event_to_wordpress(
         _get_wordpress_events_api_url(cfg.wordpress_url),
         json=event_data,
         auth=cfg.wordpress_credentials,
+        timeout=30,
     )
     if response.status_code == 201:
         logging.info("Event '%s' created successfully.", title)

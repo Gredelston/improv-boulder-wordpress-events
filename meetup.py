@@ -12,19 +12,11 @@ import config
 import events
 
 
-class MeetupRequestException(Exception):
-    """Something went wrong when firing an HTTP request to Meetup."""
-
-
 def _download_ical(cfg: config.Config) -> icalendar.Calendar:
     """Download the iCal file containing all Meetup events."""
     ical_url = cfg.meetup_events_url.rstrip("/") + "/ical"
     response = requests.get(ical_url, timeout=30)
-    if response.status_code != 200:
-        raise MeetupRequestException(
-            f"Failed to get Events ical from {ical_url} "
-            "(code {response.status_code}): {response.text}"
-        )
+    response.raise_for_status()
     return icalendar.Calendar.from_ical(response.text)
 
 
