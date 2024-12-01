@@ -1,4 +1,7 @@
 {
+	"meetup": {
+		"events_url": "https://www.meetup.com/improvbouldermeetup/events"
+	},
 	"wordpress": {
 		"url": "https://improvboulder-staging.dreamhosters.com/",
 		"api_url": "https://improvboulder-staging.dreamhosters.com/wp-json/wp/v2/events",

@@ -17,6 +17,9 @@ TODO: Set up a virtual environment that contains these libraries.
 Create a config file, `config.json`, with the following structure:
 
 {
+	"meetup": {
+		"events_url": string
+	},
 	"wordpress": {
 		"url": string,
 		"username": string,

@@ -13,11 +13,6 @@ import requests.auth
 
 import config
 
-# URLs to access our Meetup group's events.
-MEETUP_EVENTS_URL = "https://www.meetup.com/improvbouldermeetup/events"
-MEETUP_EVENTS_RSS_URL = f"{MEETUP_EVENTS_URL}/rss"
-MEETUP_EVENTS_ICAL_URL = f"{MEETUP_EVENTS_URL}/ical"
-
 # Wordpress meta_key for the Meetup event ID.
 WP_META_KEY_MEETUP_EVENT_ID = "_meetup_event_id"
 
@@ -76,33 +71,47 @@ def _extract_meetup_id(vevent: icalendar.cal.Event) -> int:
     return int(capture_group)
 
 
-def download_meetup_ical() -> icalendar.Calendar:
-    response = requests.get(MEETUP_EVENTS_ICAL_URL)
+def download_meetup_ical(cfg: config.Config) -> icalendar.Calendar:
+    ical_url = _get_meetup_events_ical_url(cfg.meetup_events_url)
+    response = requests.get(ical_url)
     if response.status_code != 200:
         raise Exception(
             "Failed to get Events ical from %s (code %d): %s",
-            MEETUP_EVENTS_ICAL_URL,
+            ical_url,
             response.status_code,
             response.text,
         )
     return icalendar.Calendar.from_ical(response.text)
 
 
-def download_meetup_ical_events() -> list[icalendar.Event]:
-    calendar = download_meetup_ical()
+def download_meetup_ical_events(cfg: config.Config) -> list[icalendar.Event]:
+    calendar = download_meetup_ical(cfg)
     vevents = calendar.walk("VEVENT")
     return [Event.from_ical_vevent(vevent) for vevent in vevents]
 
 
-def download_meetup_rss() -> list[dict[str, Any]]:
-    events = feedparser.parse(MEETUP_EVENTS_RSS_URL).entries
+def download_meetup_rss(cfg: config.Config) -> list[dict[str, Any]]:
+    rss_url = _get_meetup_events_rss_url(cfg.meetup_events_url)
+    events = feedparser.parse(rss_url).entries
     logging.info(
         "Downloaded %s Meetup events from %s: %s",
         len(events),
-        MEETUP_EVENTS_URL,
+        rss_url,
         events,
     )
     return events
+
+
+def _get_meetup_events_rss_url(meetup_events_url: str) -> str:
+    """Return the URL used for GET-ing an RSS feed of Meetup events."""
+    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
+    return meetup_events_url.rstrip("/") + "/rss"
+
+
+def _get_meetup_events_ical_url(meetup_events_url: str) -> str:
+    """Return the URL used for GET-ing an iCal of Meetup events."""
+    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
+    return meetup_events_url.rstrip("/") + "/ical"
 
 
 def get_event_id_from_meetup_event(event: dict[str, Any]) -> str:
@@ -113,7 +122,7 @@ def get_event_id_from_meetup_event(event: dict[str, Any]) -> str:
 
 def _get_wordpress_events_api_url(wordpress_url: str) -> str:
     """Return a Wordpress URL we can send HTTP requeasts for events to."""
-    # TODO: Use urlparse (or urllib.prase, or whatever it's called these days)
+    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
     return wordpress_url.rstrip("/") + "/wp-json/wp/v2/events"
 
 
@@ -164,4 +173,3 @@ def upload_event_to_wordpress(
         logging.info("Event '%s' created successfully.", title)
     else:
         logging.warning("Failed to create event '%s': %s", title, response.text)
-

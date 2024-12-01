@@ -20,25 +20,37 @@ class Config:
     @property
     def wordpress(self) -> dict[str, Any]:
         """Return wordpress config."""
-        _get(self._json, "wordpress", dict_name="config")
-        return self._json["wordpress"]
+        return _get(self._json, "wordpress", dict_name="config")
+
+    @property
+    def meetup(self) -> dict[str, Any]:
+        """Return Meetup config."""
+        return _get(self._json, "meetup", dict_name="config")
 
     @property
     def wordpress_url(self) -> str:
         """Return the Wordpress URL."""
         wordpress = self.wordpress
-        _get(wordpress, "url", dict_name="wordpress config")
-        return wordpress["url"]
+        return _get(wordpress, "url", dict_name="wordpress config")
 
     @property
     def wordpress_credentials(self) -> requests.auth.HTTPBasicAuth:
         """Return credentials used to access the Wordpress API."""
         wordpress = self.wordpress
-        _get(wordpress, "username", dict_name="wordpress config")
-        _get(wordpress, "application-password", dict_name="wordpress config")
         return requests.auth.HTTPBasicAuth(
-            wordpress["username"], wordpress["application-password"]
+            _get(wordpress, "username", dict_name="wordpress config"),
+            _get(
+                wordpress,
+                "application-password",
+                dict_name="wordpress config",
+            ),
         )
+
+    @property
+    def meetup_events_url(self) -> str:
+        """Return the Meetup Events URL."""
+        meetup = self.meetup
+        return _get(meetup, "events_url", "meetup config")
 
 
 def load(config_file: Path = CONFIG_FILE) -> Config:
