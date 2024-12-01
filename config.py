@@ -17,15 +17,6 @@ class Config:
         """Initialize a Config object that reads from a json dict."""
         self._json = config_json
 
-    @classmethod
-    def load(cls, config_file: Path = CONFIG_FILE) -> "Config":
-        """Load the config JSON file."""
-        logging.info("Loading config file: %s", config_file)
-        if not config_file.exists():
-            raise FileNotFoundError(config_file)
-        with open(config_file, "r") as f:
-            return cls(json.load(f))
-
     @property
     def wordpress(self) -> dict[str, Any]:
         """Return wordpress config."""
@@ -48,6 +39,15 @@ class Config:
         return requests.auth.HTTPBasicAuth(
             wordpress["username"], wordpress["application-password"]
         )
+
+
+def load(config_file: Path = CONFIG_FILE) -> Config:
+    """Load the config JSON file."""
+    logging.debug("Loading config file: %s", config_file)
+    if not config_file.exists():
+        raise FileNotFoundError(config_file)
+    with open(config_file, "r") as f:
+        return Config(json.load(f))
 
 
 def _get(d: dict[str, Any], key: str, dict_name: str = "dict") -> Any:

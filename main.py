@@ -4,6 +4,7 @@ import argparse
 import logging
 import sys
 
+import config
 import events
 
 
@@ -27,6 +28,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str]) -> None:
     args = parse_args(argv)
     logging.getLogger().setLevel(args.log_level)
+    
+    cfg = config.load()
     meetup_events = events.download_meetup_ical_events()
     for event in meetup_events:
         event.print()

@@ -113,18 +113,19 @@ def get_event_id_from_meetup_event(event: dict[str, Any]) -> str:
 
 def _get_wordpress_events_api_url(wordpress_url: str) -> str:
     """Return a Wordpress URL we can send HTTP requeasts for events to."""
-    wordpress_url = config.Config.load().wordpress_url
     # TODO: Use urlparse (or urllib.prase, or whatever it's called these days)
     return wordpress_url.rstrip("/") + "/wp-json/wp/v2/events"
 
 
-def get_wordpress_event(meetup_event_id: str) -> dict[str, Any] | None:
+def get_wordpress_event(
+    cfg: config.Config,
+    meetup_event_id: str,
+) -> dict[str, Any] | None:
     """Check Wordpress to see whether a Meetup event already exists."""
     params = {
         "meta_key": WP_META_KEY_MEETUP_EVENT_ID,
         "meta_value": meetup_event_id,
     }
-    cfg = config.Config.load()
     response = requests.get(
         _get_wordpress_events_api_url(cfg.wordpress_url),
         params=params,
@@ -144,10 +145,10 @@ def get_wordpress_event(meetup_event_id: str) -> dict[str, Any] | None:
 
 
 def upload_event_to_wordpress(
+    cfg: config.Config,
     title: str,
     description: str,
 ) -> None:
-    cfg = config.Config.load()
     event_data = {
         "title": title,
         "content": description,
