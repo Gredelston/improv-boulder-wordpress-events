@@ -104,13 +104,11 @@ def download_meetup_rss(cfg: config.Config) -> list[dict[str, Any]]:
 
 def _get_meetup_events_rss_url(meetup_events_url: str) -> str:
     """Return the URL used for GET-ing an RSS feed of Meetup events."""
-    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
     return meetup_events_url.rstrip("/") + "/rss"
 
 
 def _get_meetup_events_ical_url(meetup_events_url: str) -> str:
     """Return the URL used for GET-ing an iCal of Meetup events."""
-    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
     return meetup_events_url.rstrip("/") + "/ical"
 
 
@@ -122,7 +120,6 @@ def get_event_id_from_meetup_event(event: dict[str, Any]) -> str:
 
 def _get_wordpress_events_api_url(wordpress_url: str) -> str:
     """Return a Wordpress URL we can send HTTP requeasts for events to."""
-    # TODO: Use urlparse (or urllib.parse, or whatever it's called these days)
     return wordpress_url.rstrip("/") + "/wp-json/wp/v2/events"
 
 
