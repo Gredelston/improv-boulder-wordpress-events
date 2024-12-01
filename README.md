@@ -1,4 +1,11 @@
-# Import Meetup Events... But For Free
+# Improv Boulder Wordpress Events
+
+This script allows us to import events from Meetup into Wordpress.
+
+Normally we would need to pay for Meetup Pro to access the Meetup API, but we
+can get by with the freely available iCal download. Likewise, normally we would
+need to pay for the Wordpress Events Calendar pro subscription to schedule
+imports, but this script lets us post events via direct HTTP requests.
 
 ## Prerequisites
 
