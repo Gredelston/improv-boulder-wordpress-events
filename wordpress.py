@@ -75,8 +75,6 @@ def upload_event(
             auth=cfg.wordpress_credentials,
             timeout=30,
         )
-    if response.ok:
-        logging.info("Successfully created event: %s", event.title)
-    else:
-        logging.error(
-            "Failed to create event '%s': %s", event.title, response.text)
+    response.raise_for_status()
+    logging.info("Successfully created event: %s", event.title)
+
