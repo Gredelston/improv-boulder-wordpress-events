@@ -16,15 +16,11 @@ def _get_wordpress_events_api_url(wordpress_url: str) -> str:
     return wordpress_url.rstrip("/") + "/wp-json/wp/v2/events"
 
 
-def get_wordpress_event(
+def get_wordpress_events(
     cfg: config.Config,
-    event_id: str,
-) -> dict[str, Any] | None:
-    """Check Wordpress to see whether a event already exists on Wordpress."""
-    params = {
-        "meta_key": WP_META_KEY_MEETUP_EVENT_ID,
-        "meta_value": event_id,
-    }
+    params: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Return a list of events already on Wordpress."""
     response = requests.get(
         _get_wordpress_events_api_url(cfg.wordpress_url),
         params=params,
@@ -32,13 +28,25 @@ def get_wordpress_event(
         timeout=30,
     )
     response.raise_for_status()
-    events = response.json()
-    if not events:
+    return response.json()
+
+
+def get_wordpress_event_by_id(
+    cfg: config.Config,
+    event_id: str,
+) -> dict[str, Any] | None:
+    """Return the pre-existing Wordpress event with the given ID."""
+    params = {
+        "meta_key": WP_META_KEY_MEETUP_EVENT_ID,
+        "meta_value": event_id,
+    }
+    wp_events = get_wordpress_events(cfg, params)
+    if not wp_events:
         return None
-    if len(events) > 1:
+    if len(wp_events) > 1:
         raise exceptions.InvalidResponseException(
-            f"Found {len(events)} events with ID {event_id}: {events}")
-    return events[0]
+            f"Found {len(wp_events)} events with ID {event_id}: {wp_events}")
+    return wp_events[0]
 
 
 def upload_event_to_wordpress(
