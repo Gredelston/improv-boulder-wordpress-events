@@ -6,6 +6,7 @@ from typing import Any
 import requests
 
 import config
+import events
 import exceptions
 
 # Wordpress meta_key for the Meetup event ID.
@@ -49,25 +50,33 @@ def get_wordpress_event_by_id(
     return wp_events[0]
 
 
-def upload_event_to_wordpress(
+def upload_event(
     cfg: config.Config,
-    title: str,
-    description: str,
+    event: events.Event,
+    dryrun: bool = False,
 ) -> None:
     """Upload an event to Wordpress."""
-    event_data = {
-        "title": title,
-        "content": description,
+    post_data = {
+        "title": event.title,
+        "content": event.description,
         "status": "publish",
     }
-    logging.info("Trying to create event: %s", event_data)
-    response = requests.post(
-        _get_wordpress_events_api_url(cfg.wordpress_url),
-        json=event_data,
-        auth=cfg.wordpress_credentials,
-        timeout=30,
-    )
-    if response.status_code == 201:
-        logging.info("Event '%s' created successfully.", title)
+    api_url = _get_wordpress_events_api_url(cfg.wordpress_url)
+    logging.info("Trying to create event: %s", event.title)
+    response: requests.Response
+    if dryrun:
+        logging.info("DRYRUN: Skipping POST to %s with %s", api_url, post_data)
+        response = requests.Response()
+        response.status_code = 201
     else:
-        logging.error("Failed to create event '%s': %s", title, response.text)
+        response = requests.post(
+            api_url,
+            json=post_data,
+            auth=cfg.wordpress_credentials,
+            timeout=30,
+        )
+    if response.ok:
+        logging.info("Successfully created event: %s", event.title)
+    else:
+        logging.error(
+            "Failed to create event '%s': %s", event.title, response.text)

@@ -8,6 +8,7 @@ import sys
 
 import config
 import meetup
+import wordpress
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -36,7 +37,7 @@ def main(argv: list[str]) -> None:
     cfg = config.load()
     meetup_events = meetup.download_events(cfg)
     for event in meetup_events:
-        event.print()
+        wordpress.upload_event(cfg, event, dryrun=args.dryrun)
 
 
 if __name__ == "__main__":
