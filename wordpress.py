@@ -70,4 +70,4 @@ def upload_event_to_wordpress(
     if response.status_code == 201:
         logging.info("Event '%s' created successfully.", title)
     else:
-        logging.warning("Failed to create event '%s': %s", title, response.text)
+        logging.error("Failed to create event '%s': %s", title, response.text)
